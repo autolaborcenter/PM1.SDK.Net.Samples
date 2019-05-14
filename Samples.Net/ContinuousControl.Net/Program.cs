@@ -22,10 +22,6 @@ namespace ContinuousControl.Net
                 string port = Methods.Initialize("", out progress); // 初始化连接
                 Console.WriteLine("connected to " + port);
                 Methods.State = StateEnum.Unlocked;             // 解锁
-                while (Methods.State != StateEnum.Unlocked)
-                {
-                    Thread.Sleep(100);
-                }
                 Console.WriteLine("操作\n[方向键控制前后左右]\n[Esc键退出程序]");
                 while(GetKeyState(0x1b) >= 0)
                 {

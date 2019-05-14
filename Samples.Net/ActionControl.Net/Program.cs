@@ -64,6 +64,7 @@ namespace ActionControl.Net
                         {
                             try
                             {
+                                Console.WriteLine(cmd);
                                 switch (cmd)
                                 {
                                     case "front":       // 直行1m
@@ -98,12 +99,13 @@ namespace ActionControl.Net
                             }
                             catch { }
                         });
+                        thread.IsBackground = true;
+                        thread.Start();
+                        Thread.Sleep(100);
                         if (progress < 0)
                         {
                             continue;
                         }
-                        thread.IsBackground = true;
-                        thread.Start();
                         Console.WriteLine("[按下Esc键可终止正在执行的动作]");
                         Console.Write("[ 0%]");
                         double last = 0;
