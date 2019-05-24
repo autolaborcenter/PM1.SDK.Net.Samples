@@ -5,8 +5,8 @@ namespace ContinuousControl.Net {
     class Program {
         static void Main() {
             try {
-                Console.WriteLine("initializing...");
-                Console.WriteLine("connected: {0}", Methods.Initialize("", out _));
+                Console.Write("initialize: ");
+                Console.WriteLine("{0} connected", Methods.Initialize("", out _));
                 Methods.State = StateEnum.Unlocked;
 
                 Console.WriteLine("--------------");
@@ -57,7 +57,7 @@ namespace ContinuousControl.Net {
             } finally {
                 Methods.ShutdownSafety();
             }
-            Console.WriteLine("press any key to exit");
+            Console.WriteLine("press any key to continue");
             Console.ReadKey();
         }
     }
