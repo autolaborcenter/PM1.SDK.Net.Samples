@@ -8,7 +8,7 @@ namespace ActionControl.Net {
         [DllImport("user32.dll", EntryPoint = "GetKeyState")]
         public static extern short GetKeyState(int nVirtKey);
 
-        static void Main(string[] args) {
+        static void Main() {
             try {
                 Console.WriteLine("initializing...");
                 double progress = 0;
