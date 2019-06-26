@@ -1,7 +1,6 @@
 ﻿using Autolabor.PM1.TestTool.MainWindowItems;
 using Autolabor.PM1.TestTool.MainWindowItems.SettingsWindow;
 using System;
-using System.Globalization;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.IO.Ports;

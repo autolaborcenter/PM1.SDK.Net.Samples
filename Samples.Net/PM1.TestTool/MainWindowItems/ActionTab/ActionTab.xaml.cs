@@ -75,8 +75,7 @@ namespace Autolabor.PM1.TestTool.MainWindowItems.ActionTab {
         }
 
         private struct ActionConfig {
-            public double v, w, range;
-            public bool timeBased;
+            public double v, w, range0, range1;
 
             public override string ToString()
                 => string.Format(
@@ -112,17 +111,17 @@ namespace Autolabor.PM1.TestTool.MainWindowItems.ActionTab {
             try {
                 while (!ActionList.Items.IsEmpty) {
                     if (ActionList.Items[0] is ActionConfig action)
-                        if (action.timeBased)
+                        if (double.IsNaN(action.range1))
                             await AsyncMethods.DriveAsync(
                                 action.v, action.w,
-                                TimeSpan.FromSeconds(action.range),
+                                TimeSpan.FromSeconds(action.range0),
                                 x => _windowContext.Progress = x,
                                 e => _windowContext.ErrorInfo = e.Message
                             ).ConfigureAwait(true);
                         else
                             await AsyncMethods.DriveAsync(
                                 action.v, action.w,
-                                action.range,
+                                action.range0,action.range1,
                                 x => _windowContext.Progress = x,
                                 e => _windowContext.ErrorInfo = e.Message
                             ).ConfigureAwait(true);
@@ -143,8 +142,8 @@ namespace Autolabor.PM1.TestTool.MainWindowItems.ActionTab {
             }
         }
 
-        private void ActionEditor_OnCompleted(double v, double w, bool timeBased, double range) {
-            ActionList.Items.Add(new ActionConfig { v = v, w = w, range = range, timeBased = timeBased });
+        private void ActionEditor_OnCompleted(double v, double w, double range0, double range1) {
+            ActionList.Items.Add(new ActionConfig { v = v, w = w, range0 = range0, range1 = range1 });
             if (task == null) task = Task.Run(InvokeActions);
         }
 

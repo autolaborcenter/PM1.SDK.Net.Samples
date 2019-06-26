@@ -130,7 +130,7 @@ namespace Autolabor.PM1.TestTool.MainWindowItems.ActionTab {
         private readonly IReadOnlyList<Input> _inputs;
         private readonly IReadOnlyDictionary<Input, Input> _signPairs;
 
-        public delegate void OnCompletedHandler(double v, double w, bool timeBased, double range);
+        public delegate void OnCompletedHandler(double v, double w, double range0, double range1);
         public event OnCompletedHandler OnCompleted;
 
         public ActionView() {
@@ -313,7 +313,7 @@ namespace Autolabor.PM1.TestTool.MainWindowItems.ActionTab {
         /// <param name="theOne">新设置的参数</param>
         /// <returns>检查是否通过</returns>
         private Input CheckSign(Input theOne)
-            => !_signPairs.TryGetValue(theOne, out var others) 
+            => !_signPairs.TryGetValue(theOne, out var others)
             || double.IsNaN(others.Value)
             || Math.Sign(others.Value) == Math.Sign(theOne.Value)
                ? null
@@ -337,79 +337,65 @@ namespace Autolabor.PM1.TestTool.MainWindowItems.ActionTab {
                  || (ranference.Contains(_r) && _r.Value == 0)) {
                     SetSlave(0);
                     return true;
-                }
-                else if (ranference.Contains(_w)
-                      && ranference.Contains(_r)
-                      && _w.Value != 0) {
+                } else if (ranference.Contains(_w)
+                        && ranference.Contains(_r)
+                        && _w.Value != 0) {
                     SetSlave(_w.Value.ToRad() * _r.Value);
                     return true;
                 }
-            }
-            else if (input == _w) {
+            } else if (input == _w) {
                 if (ranference.Contains(_a) && _a.Value == 0) {
                     SetSlave(0);
                     return true;
-                }
-                else if (ranference.Contains(_v)
-                      && ranference.Contains(_r)
-                      && _v.Value != 0) {
+                } else if (ranference.Contains(_v)
+                        && ranference.Contains(_r)
+                        && _v.Value != 0) {
                     SetSlave((_v.Value / _r.Value).ToDegree());
                     return true;
                 }
-            }
-            else if (input == _r) {
+            } else if (input == _r) {
                 if ((ranference.Contains(_v) && _v.Value == 0)
                  || (ranference.Contains(_s) && _s.Value == 0)) {
                     SetSlave(0);
                     return true;
-                }
-                else if (ranference.Contains(_w) && _w.Value == 0) {
+                } else if (ranference.Contains(_w) && _w.Value == 0) {
                     SetSlave(double.PositiveInfinity);
                     return true;
-                }
-                else if (ranference.Contains(_v) && ranference.Contains(_w)) {
+                } else if (ranference.Contains(_v) && ranference.Contains(_w)) {
                     SetSlave(_v.Value / _w.Value.ToRad());
                     return true;
-                }
-                else if (ranference.Contains(_s) && ranference.Contains(_a)) {
+                } else if (ranference.Contains(_s) && ranference.Contains(_a)) {
                     SetSlave(_s.Value / _a.Value.ToRad());
                     return true;
                 }
-            }
-            else if (input == _s) {
+            } else if (input == _s) {
                 if (ranference.Contains(_t)) {
                     input.State = Input.StateEnum.Invalid;
                     return true;
-                }
-                else if ((ranference.Contains(_v) && _v.Value == 0)
-                      || (ranference.Contains(_r) && _r.Value == 0)) {
+                } else if ((ranference.Contains(_v) && _v.Value == 0)
+                        || (ranference.Contains(_r) && _r.Value == 0)) {
                     SetSlave(0);
                     return true;
-                }
-                else if (ranference.Contains(_a)
-                      && ranference.Contains(_r)
-                      && _a.Value != 0) {
+                } else if (ranference.Contains(_a)
+                        && ranference.Contains(_r)
+                        && _a.Value != 0) {
                     SetSlave(_a.Value.ToRad() * _r.Value);
                     return true;
                 }
-            }
-            else if (input == _a) {
+            } else if (input == _a) {
                 if (ranference.Contains(_t)) {
                     input.State = Input.StateEnum.Invalid;
                     return true;
-                }
-                else if (ranference.Contains(_w) && _w.Value == 0) {
+                } else if (ranference.Contains(_w) && _w.Value == 0) {
                     SetSlave(0);
                     return true;
-                }
-                else if (ranference.Contains(_s)
-                      && ranference.Contains(_r)
-                      && _s.Value != 0) {
+                } else if (ranference.Contains(_s)
+                        && ranference.Contains(_r)
+                        && _s.Value != 0) {
                     SetSlave((_s.Value / _r.Value).ToDegree());
                     return true;
                 }
-            }
-            else if (input == _t) {
+            } else if (input == _t) {
                 if (_s.IsMaster || _a.IsMaster) {
                     input.State = Input.StateEnum.Invalid;
                     return true;
@@ -425,10 +411,8 @@ namespace Autolabor.PM1.TestTool.MainWindowItems.ActionTab {
             var timeBased = _t.IsMaster;
             OnCompleted?.Invoke(_v.Value,
                                 _w.Value.ToRad(),
-                                timeBased,
-                                timeBased ? _t.Value
-                                          : Methods.CalculateSpatium(Math.Abs(_s.Value),
-                                                                     Math.Abs(_a.Value.ToRad())));
+                                timeBased ? _t.Value : _s.Value,
+                                timeBased ? double.NaN : _a.Value.ToRad());
             Reset();
         }
     }
