@@ -28,7 +28,7 @@ namespace Autolabor.PM1.TestTool.MainWindowItems.DriveVelocityTab {
             }
         }
 
-        public double W => (V < 0 ? -1 : 1) * (_gMaxW.Value ?? _maxW.Default) * _wRange * 2 * (Left - OX) / Width;
+        public double W => (V < 0 ? 1 : -1) * (_gMaxW.Value ?? _maxW.Default) * _wRange * 2 * (Left - OX) / Width;
 
         public double VRange {
             get => _vRange;
