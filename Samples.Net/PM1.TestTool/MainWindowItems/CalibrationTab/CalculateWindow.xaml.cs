@@ -2,8 +2,22 @@
 
 namespace Autolabor.PM1.TestTool.MainWindowItems.CalibrationTab {
     internal class CalculateContext : BindableBase {
+        private bool _inverse;
         private string _unit;
         private double _actual, _odometry, _current;
+
+        public bool Inverse {
+            get => _inverse;
+            set {
+                if (!SetProperty(ref _inverse, value)) return;
+                Notify(nameof(Sign0));
+                Notify(nameof(Sign1));
+            }
+        }
+
+        public string Sign0 => _inverse ? "÷" : "×";
+
+        public string Sign1 => _inverse ? "×" : "÷";
 
         public string Unit {
             get => _unit;
@@ -37,7 +51,10 @@ namespace Autolabor.PM1.TestTool.MainWindowItems.CalibrationTab {
             }
         }
 
-        public double Calculated => _actual / _odometry * _current;
+        public double Calculated
+            => _inverse
+            ? _current / (_actual / _odometry)
+            : _current * (_actual / _odometry);
     }
 
     /// <summary>
@@ -46,9 +63,10 @@ namespace Autolabor.PM1.TestTool.MainWindowItems.CalibrationTab {
     public partial class CalculateWindow : Window {
         private CalculateContext _context;
 
-        public CalculateWindow(double odometry,string unit, double current) {
+        public CalculateWindow(double odometry, bool inverse, string unit, double current) {
             _context = new CalculateContext {
                 Odometry = odometry,
+                Inverse = inverse,
                 Unit = unit,
                 Current = current
             };
@@ -61,6 +79,7 @@ namespace Autolabor.PM1.TestTool.MainWindowItems.CalibrationTab {
             @new.Odometry = _context.Odometry;
             @new.Current = _context.Current;
             @new.Unit = _context.Unit;
+            @new.Inverse = _context.Inverse;
             _context = @new;
         }
     }

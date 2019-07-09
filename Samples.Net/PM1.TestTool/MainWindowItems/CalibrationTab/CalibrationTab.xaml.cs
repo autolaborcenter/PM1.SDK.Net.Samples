@@ -82,14 +82,14 @@ namespace Autolabor.PM1.TestTool.MainWindowItems.CalibrationTab {
                         break;
                     case TabContext.StateEnum.Calibrating0:
                         _tabContext.State = TabContext.StateEnum.Normal;
-                        new CalculateWindow(Methods.Odometry.x, "米",
+                        new CalculateWindow(Methods.Odometry.x, false, "米",
                                             Methods.Parameters[IdEnum.WheelRadius].Value.Value) {
                             Owner = Application.Current.MainWindow
                         }.ShowDialog();
                         break;
                     case TabContext.StateEnum.Calibrating1:
                         _tabContext.State = TabContext.StateEnum.Normal;
-                        new CalculateWindow(Methods.Odometry.sa.ToDegree(), "°",
+                        new CalculateWindow(Methods.Odometry.sa.ToDegree(), true, "°",
                                             Methods.Parameters[IdEnum.Width].Value.Value) {
                             Owner = Application.Current.MainWindow
                         }.ShowDialog();
